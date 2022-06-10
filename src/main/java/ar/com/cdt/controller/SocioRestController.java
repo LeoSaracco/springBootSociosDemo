@@ -1,6 +1,7 @@
 package ar.com.cdt.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.com.cdt.entities.Socio;
-import ar.com.cdt.repository.SocioRepository;
+import ar.com.cdt.service.SocioService;
 
 /**
  *
@@ -26,32 +27,30 @@ import ar.com.cdt.repository.SocioRepository;
 public class SocioRestController {
 
 	@Autowired
-	SocioRepository socioRepository;
+	SocioService socioService;
 
 	@GetMapping()
 	public List<Socio> list() {
-		return socioRepository.findAll();
+		return socioService.getSocios();
 	}
 
 	@GetMapping("/{id}")
-	public Socio get(@PathVariable String id) {
-		return null;
+	public Optional<Socio> get(@PathVariable Long id) {
+		return socioService.getSocioByID(id);
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity<?> put(@PathVariable String id, @RequestBody Socio input) {
-		return null;
+	@PutMapping()
+	public ResponseEntity<?> put(@RequestBody Socio socio) {
+		return socioService.updateSocio(socio);
 	}
 
 	@PostMapping
-	public ResponseEntity<?> post(@RequestBody Socio input) {
-		Socio save = socioRepository.save(input);
-		return ResponseEntity.ok(save);
+	public ResponseEntity<?> post(@RequestBody Socio socio) {
+		return socioService.saveSocio(socio);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> delete(@PathVariable String id) {
-		return null;
+	public ResponseEntity<?> delete(@PathVariable Long id) {
+		return socioService.deleteSocio(id);
 	}
-
 }
